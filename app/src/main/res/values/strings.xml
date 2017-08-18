@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Manager</string>
+    <string name="save">save</string>
+    <string name="name">Name</string>
+    <string name="phone">Phone</string>
+    <string name="address">Address</string>
+    <string name="pan">PAN</string>
+    <string name="aadhaar">Aadhaar (UID)</string>
+    <string name="gstin">GSTIN</string>
+    <string name="add_image">Add Image</string>
+    <string name="camera">Camera (Low Qwality)</string>
+    <string name="gallery">Gallery</string>
+    <string name="cancel">Cancel</string>
+    <string name="launch_camera">Launch Camera Application</string>
+    <string name="uploading_message">Uploading</string>
+    <string name="uploaded">Uploaded</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_image_of_any_bill_or_document">Add image of any bill or document</string>
+    <string name="add_notes">Add Notes</string>
+    <string name="email_optional">Email (Optional)</string>
+    <string name="scan_aadhaar_qr_code">Scan Aadhaar QR Code</string>
+    <string name="delete_success">Images was deleted!</string>
+    <string name="delete_failure">Image deletion failed</string>
+    <string name="saved_message">Image Saved at %1$s</string>
+    <string name="not_saved">Image not saved!</string>
+    <string name="error">Error finding image</string>
+</resources>
