@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -22,10 +23,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -39,6 +43,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
@@ -56,6 +61,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
     private Uri selectedImageUri = null;
     private String downLoadUrl, mTempPhotoPath;
     private StorageReference mStorageRef;
+    private DatabaseReference mDatabase;
     private static final String FILE_PROVIDER_AUTHORITY = "com.tarun.saini.fileprovider";
 
     @Override
@@ -75,25 +81,13 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
         photo_tv = (TextView) findViewById(R.id.add_photo_text);
         imageView = (ImageView) findViewById(R.id.image);
 
-        String pattern = "dd MMM yyyy";
+
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
-
-        phone_string = phone.getText().toString();
-        gst_string = gst.getText().toString();
-        pan_string = pan.getText().toString();
-        email_string = email.getText().toString();
-        notes_string = notes.getText().toString();
-        dateInString = new SimpleDateFormat(pattern).format(new Date());
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Customer");
 
         imageButton.setOnClickListener(this);
         photo_tv.setOnClickListener(this);
         imageView.setOnClickListener(this);
-
-
-        Toast.makeText(this, "" + dateInString, Toast.LENGTH_SHORT).show();
-
-
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
         save = (Button) findViewById(R.id.save_button);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -147,31 +141,37 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
             Bitmap bmp;
             if (requestCode == REQUEST_CAMERA) {
 
-               // bmp = BitmapUtils.resamplePic(this, mTempPhotoPath);
-
-                Bundle bundle = data.getExtras();
-                bmp = (Bitmap) bundle.get("data");
+                bmp = BitmapUtils.resamplePic(this, mTempPhotoPath);
+                //  bmp = (Bitmap)  data.getExtras().get("data");
                 String path = MediaStore.Images.Media.insertImage(getContentResolver(), bmp, "Title", null);
                 selectedImageUri = Uri.parse(path);
-                //selectedImageUri = getImageUri(this, bmp);
-                imageView.setImageBitmap(bmp);
+                Glide.with(this)
+                        .load(selectedImageUri)
+                        .asBitmap()
+                        .into(imageView);
+            }
+            //selectedImageUri = getImageUri(this, bmp);
+            //imageView.setImageBitmap(bmp);
 
-            } else if (requestCode == SELECT_FILE) {
+            else if (requestCode == SELECT_FILE) {
 
                 selectedImageUri = data.getData();
                 try {
                     bmp = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedImageUri);
-                    imageView.setImageBitmap(bmp);
+                    Glide.with(this)
+                            .load(selectedImageUri)
+                            .asBitmap()
+                            .into(imageView);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
             }
 
-        }else {
+        } else {
 
             // Otherwise, delete the temporary image file
-            //BitmapUtils.deleteImageFile(this, mTempPhotoPath);
+            BitmapUtils.deleteImageFile(this, mTempPhotoPath);
         }
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -180,7 +180,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
 
     private void SelectImage() {
 
-        final CharSequence[] items = {getString(R.string.camera), getString(R.string.gallery), getString(R.string.launch_camera), getString(R.string.cancel)};
+        final CharSequence[] items = {getString(R.string.camera), getString(R.string.gallery), getString(R.string.cancel)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.add_image);
@@ -191,7 +191,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (items[i].equals(getString(R.string.camera))) {
 
-                    /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     // Ensure that there's a camera activity to handle the intent
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         // Create the temporary File where the photo should go
@@ -215,14 +215,14 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
 
                             // Add the URI so the camera can store the image
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                            startActivityForResult(intent, REQUEST_CAMERA);
+                            startActivityForResult(Intent.createChooser(intent, "Choose Camera"), REQUEST_CAMERA);
 
 
                         }
-                    }*/
+                    }
 
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, REQUEST_CAMERA);
+                    /*Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);*/
                 } else if (items[i].equals(getString(R.string.gallery))) {
 
                     Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -251,7 +251,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
 
 
     //upload image to firebase storage
-    private void uploadImage() {
+    private void uploadCustomerData() {
 
         String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
         //if there is a file to upload
@@ -271,12 +271,21 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                             @SuppressWarnings("VisibleForTests") Uri ImageUrl = taskSnapshot.getDownloadUrl();
                             assert ImageUrl != null;
                             downLoadUrl = ImageUrl.toString().trim();
-                            if (!TextUtils.isEmpty(downLoadUrl)) {
-
-
+                            if (!TextUtils.isEmpty(name_string)) {
+                                DatabaseReference newCustomer = mDatabase.push();
+                                newCustomer.child("name").setValue(name_string);
+                                newCustomer.child("address").setValue(address_string);
+                                newCustomer.child("uid").setValue(uid_string);
+                                newCustomer.child("phone").setValue(phone_string);
+                                newCustomer.child("gst").setValue(gst_string);
+                                newCustomer.child("pan").setValue(pan_string);
+                                newCustomer.child("date").setValue(dateInString);
+                                newCustomer.child("downloadUrl").setValue(downLoadUrl);
+                                newCustomer.child("email").setValue(email_string);
+                                newCustomer.child("notes").setValue(notes_string);
                             }
 
-                            Intent homeIntent = new Intent(CustomerAdd.this, CustomerAdd.class);
+                            Intent homeIntent = new Intent(CustomerAdd.this, CustomerInfo.class);
                             startActivity(homeIntent);
 
 
@@ -304,6 +313,44 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                     });
         }
 
+        else
+            {
+                if (!TextUtils.isEmpty(name_string)) {
+                    DatabaseReference newCustomer = mDatabase.push();
+                    newCustomer.child("name").setValue(name_string);
+                    newCustomer.child("address").setValue(address_string);
+                    newCustomer.child("uid").setValue(uid_string);
+                    newCustomer.child("phone").setValue(phone_string);
+                    newCustomer.child("gst").setValue(gst_string);
+                    newCustomer.child("pan").setValue(pan_string);
+                    newCustomer.child("date").setValue(dateInString);
+                    newCustomer.child("email").setValue(email_string);
+                    newCustomer.child("notes").setValue(notes_string);
+                    final ProgressDialog progressDialog = new ProgressDialog(this);
+                    progressDialog.setTitle(getString(R.string.saving_message)+"%.....");
+                    progressDialog.show();
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run()
+                        {
+
+                            progressDialog.dismiss();
+                            Intent homeIntent = new Intent(CustomerAdd.this, CustomerInfo.class);
+                            startActivity(homeIntent);
+
+                        }
+                    },2000);
+
+
+
+                }
+                else
+                    {
+                        Toast.makeText(this, "Please add some info about customer", Toast.LENGTH_SHORT).show();
+                    }
+            }
+
 
     }
 
@@ -311,13 +358,23 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
 // phone_string, gst_string, pan_string, email_string, notes_string,
 // dateInString;
 
-    public void saveInDataBase(View view) {
-        if (!TextUtils.isEmpty(name_string)) {
+    public void saveInDataBase(View view)
+    {
+        String pattern = "dd MMM yyyy";
+        name_string = name.getText().toString();
+        address_string = address.getText().toString();
+        uid_string = uid.getText().toString();
+        phone_string = phone.getText().toString();
+        gst_string = gst.getText().toString();
+        pan_string = pan.getText().toString();
+        email_string = email.getText().toString();
+        notes_string = notes.getText().toString();
+        dateInString = new SimpleDateFormat(pattern).format(new Date());
 
-        }
-        uploadImage();
+        uploadCustomerData();
 
     }
 
 
 }
+

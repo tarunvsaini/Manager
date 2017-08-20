@@ -10,11 +10,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class CustomerInfo extends AppCompatActivity {
@@ -22,13 +29,21 @@ public class CustomerInfo extends AppCompatActivity {
 
     FloatingActionButton fab;
     Toolbar toolbar;
+    RecyclerView recyclerView;
+    private DatabaseReference mDatabase;
+    RelativeLayout empty_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_info);
+        mDatabase= FirebaseDatabase.getInstance().getReference().child("Customer");
         fab= (FloatingActionButton) findViewById(R.id.fab);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        empty_view= (RelativeLayout) findViewById(R.id.empty_view);
+        recyclerView= (RecyclerView) findViewById(R.id.customer_recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
@@ -84,5 +99,62 @@ public class CustomerInfo extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        FirebaseRecyclerAdapter<Customer,CustomerviewHolder> firebaseRecyclerAdapter
+                =new FirebaseRecyclerAdapter<Customer, CustomerviewHolder>(Customer.class,R.layout.list_item,CustomerviewHolder.class,mDatabase) {
+            @Override
+            protected void populateViewHolder(CustomerviewHolder viewHolder, Customer model, int position) {
+
+
+                viewHolder.setName(model.getName());
+                viewHolder.setPhone(model.getPhone());
+                viewHolder.setDate(model.getDate());
+
+            }
+        };
+
+        if (recyclerView!=null)
+        {
+            recyclerView.setAdapter(firebaseRecyclerAdapter);
+            empty_view.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+
+    public static class CustomerviewHolder extends RecyclerView.ViewHolder
+    {
+        View mView;
+
+        public CustomerviewHolder(View itemView) {
+            super(itemView);
+
+            mView=itemView;
+        }
+
+        public void setName(String name)
+        {
+            TextView customer_name= (TextView) mView.findViewById(R.id.name);
+            customer_name.setText(name);
+        }
+        public void setDate(String date)
+        {
+            TextView customer_added_adte= (TextView) mView.findViewById(R.id.timestamp);
+            customer_added_adte.setText(date);
+        }
+
+        public void setPhone(String phone)
+        {
+            TextView customer_phone= (TextView) mView.findViewById(R.id.txt_primary);
+            customer_phone.setText(phone);
+        }
+
+
     }
 }

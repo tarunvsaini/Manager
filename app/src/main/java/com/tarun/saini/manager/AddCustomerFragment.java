@@ -23,6 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -67,7 +68,6 @@ public class AddCustomerFragment extends Fragment  {
 
         coordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinatorLayout);
         toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
-
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
