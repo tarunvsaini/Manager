@@ -19,7 +19,7 @@
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
@@ -28,105 +28,145 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="70dp"
         android:elevation="4dp"
-        app:cardCornerRadius="15dp">
+        app:cardCornerRadius="30dp">
 
-        <LinearLayout
-            android:id="@+id/card_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/gradient_orange"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-
-            <TextView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+            <LinearLayout
+                android:id="@+id/card_bg"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/customer_details"
-                android:layout_margin="8dp"
-                android:text="@string/customer_details"
-                android:textColor="@android:color/white"
-                android:textSize="24sp"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/customer_name"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="Ashish Jain"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/customer_address"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="H.no. 9L ambala.Haryana ,pincode:144001 "
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/customer_phone"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="9041477454"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/customer_gst"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="JSAB857ADCS89"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                />
-            <TextView
-            android:layout_width="match_parent"
-            android:id="@+id/customer_pan"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="FSKNFD9873202"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            />
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/customer_uid"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="5738932924"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/customer_email"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="ashishjain@gmail.com"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                />
-            <TextView
-                android:layout_width="match_parent"
-                android:id="@+id/customer_notes"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:text="amount left: 9000"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                />
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@drawable/gradient"
+                android:orientation="vertical"
+                android:padding="8dp">
 
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/customer_details"
+                    android:layout_margin="8dp"
+                    android:text="@string/customer_details"
+                    android:textColor="@android:color/white"
+                    android:textSize="24sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/customer_name"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="Ashish Jain"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/customer_address"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="H.no. 9L ambala.Haryana ,pincode:144001 "
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/customer_phone"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="9041477454"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/customer_gst"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="JSAB857ADCS89"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/customer_pan"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="FSKNFD9873202"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/customer_uid"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="5738932924"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/customer_email"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="ashishjain@gmail.com"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:id="@+id/customer_notes"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:text="amount left: 9000 "
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    />
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/call_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginLeft="28dp"
+                    android:layout_marginRight="28dp"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/button_bg_transparent"
+                    android:padding="8dp"
+                    android:text="Make a Call"
+                    android:textColor="@android:color/white" />
+
+
+                <Button
+                    android:id="@+id/download_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="28dp"
+                    android:layout_marginLeft="28dp"
+                    android:layout_marginRight="28dp"
+                    android:layout_marginStart="28dp"
+                    android:layout_marginBottom="8dp"
+
+                    android:background="@drawable/button_bg_transparent"
+                    android:padding="8dp"
+                    android:text="Download Attached Image"
+                    android:textColor="@android:color/white" />
+
+
+            </LinearLayout>
+
+
+
+    </ScrollView>
 
     </android.support.v7.widget.CardView>
+
+
+
 
 
     <Button
