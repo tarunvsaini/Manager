@@ -1,6 +1,5 @@
 package com.tarun.saini.manager;
 
-import android.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,8 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
@@ -83,7 +84,7 @@ public class CustomerInfo extends AppCompatActivity {
     {
         if (item.getItemId()==R.id.filter_list)
         {
-            /*startActivity(new Intent(CustomerInfo.this,CustomerAdd.class));*/
+            startActivity(new Intent(CustomerInfo.this,CustomerDetail.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -111,19 +112,56 @@ public class CustomerInfo extends AppCompatActivity {
             @Override
             protected void populateViewHolder(CustomerviewHolder viewHolder, Customer model, int position) {
 
-
+                final String post_key=getRef(position).getKey();
                 viewHolder.setName(model.getName());
                 viewHolder.setPhone(model.getPhone());
                 viewHolder.setDate(model.getDate());
+                viewHolder.setGST(model.getGst());
+
+                CustomerDetail.setLatoBlack(CustomerInfo.this,viewHolder.customer_name);
+                CustomerDetail.setLatoBlack(CustomerInfo.this,viewHolder.customer_phone);
+                CustomerDetail.setLatoBlack(CustomerInfo.this,viewHolder.customer_added_date);
+                CustomerDetail.setLatoRegular(CustomerInfo.this,viewHolder.customer_gst);
+
+
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(CustomerInfo.this, post_key+"", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+                final boolean checked=viewHolder.add_important.isChecked();
+                viewHolder.add_important.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if ((checked)) //check for condition if recipe in database
+                        {
+
+                            Toast.makeText(CustomerInfo.this, "Added", Toast.LENGTH_SHORT).show();
+
+                        } else
+                        {
+                            Toast.makeText(CustomerInfo.this, "Removed", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
 
             }
         };
 
+
         if (recyclerView!=null)
         {
+
             recyclerView.setAdapter(firebaseRecyclerAdapter);
+            firebaseRecyclerAdapter.notifyDataSetChanged();
             empty_view.setVisibility(View.INVISIBLE);
         }
+
+
 
     }
 
@@ -131,30 +169,44 @@ public class CustomerInfo extends AppCompatActivity {
     public static class CustomerviewHolder extends RecyclerView.ViewHolder
     {
         View mView;
+        CheckBox add_important;
+        TextView customer_name, customer_added_date,customer_phone,customer_gst;
 
         public CustomerviewHolder(View itemView) {
             super(itemView);
 
             mView=itemView;
+            add_important= (CheckBox) mView.findViewById(R.id.icon_star);
+
         }
 
         public void setName(String name)
         {
-            TextView customer_name= (TextView) mView.findViewById(R.id.name);
+             customer_name= (TextView) mView.findViewById(R.id.name);
             customer_name.setText(name);
+
         }
         public void setDate(String date)
         {
-            TextView customer_added_adte= (TextView) mView.findViewById(R.id.timestamp);
-            customer_added_adte.setText(date);
+             customer_added_date = (TextView) mView.findViewById(R.id.timestamp);
+            customer_added_date.setText(date);
         }
 
         public void setPhone(String phone)
         {
-            TextView customer_phone= (TextView) mView.findViewById(R.id.txt_primary);
+             customer_phone= (TextView) mView.findViewById(R.id.txt_primary);
             customer_phone.setText(phone);
+        }
+
+        public void setGST(String gst)
+        {
+             customer_gst= (TextView) mView.findViewById(R.id.txt_secondary);
+            customer_gst.setText("GSTIN: "+gst);
         }
 
 
     }
 }
+
+
+/* */

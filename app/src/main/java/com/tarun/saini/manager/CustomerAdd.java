@@ -77,9 +77,21 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
         notes = (EditText) findViewById(R.id.notes);
         email = (EditText) findViewById(R.id.email);
 
+        CustomerDetail.setLatoRegular(this,name);
+        CustomerDetail.setLatoRegular(this,address);
+        CustomerDetail.setLatoRegular(this,uid);
+        CustomerDetail.setLatoRegular(this,phone);
+        CustomerDetail.setLatoRegular(this,gst);
+        CustomerDetail.setLatoRegular(this,pan);
+        CustomerDetail.setLatoRegular(this,notes);
+        CustomerDetail.setLatoRegular(this,email);
+
+
         imageButton = (ImageButton) findViewById(R.id.add_photo_button);
         photo_tv = (TextView) findViewById(R.id.add_photo_text);
         imageView = (ImageView) findViewById(R.id.image);
+
+        CustomerDetail.setLatoRegular(this,photo_tv);
 
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -98,6 +110,8 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
 
             }
         });
+
+        CustomerDetail.setLatoBold(this,save);
 
     }
 

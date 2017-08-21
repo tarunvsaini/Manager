@@ -27,4 +27,6 @@
     <string name="saved_message">Image Saved at %1$s</string>
     <string name="not_saved">Image not saved!</string>
     <string name="error">Error finding image</string>
+    <string name="edit">Edit</string>
+    <string name="customer_details">Customer Details</string>
 </resources>

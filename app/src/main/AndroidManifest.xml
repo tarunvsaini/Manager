@@ -49,7 +49,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tarun.saini.manager.CustomerInfo" />
         </activity>
-        <activity android:name=".ScanBarcode"></activity>
+        <activity android:name=".ScanBarcode" />
+        <activity android:name=".CustomerDetail"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tarun.saini.manager.CustomerInfo" />
+        </activity>
     </application>
 
 </manifest>
