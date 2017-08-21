@@ -4,8 +4,9 @@
 
     <item
         android:id="@+id/download_image"
-        android:icon="@drawable/ic_cloud_download_white_36dp"
+        android:icon="@drawable/ic_file_download_white_36dp"
         android:title="DOWNLOAD"
+        android:visible="false"
         app:showAsAction="always"/>
     <item
         android:id="@+id/delete_customer"

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/greyBack"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.tarun.saini.manager.CustomerDetail">
 
@@ -17,32 +18,36 @@
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
 
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
+        android:layout_height="match_parent"
         android:layout_marginEnd="16dp"
+        android:layout_below="@+id/toolbar"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="70dp"
         android:elevation="4dp"
-        app:cardCornerRadius="30dp">
+        app:cardCornerRadius="20dp">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient"
+
+            >
+
+
             <LinearLayout
                 android:id="@+id/card_bg"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:background="@drawable/gradient"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="8dp"
 
-
+                >
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -59,7 +64,7 @@
                     android:layout_margin="8dp"
                     android:text="Ashish Jain"
                     android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textSize="28sp"
                     />
                 <TextView
                     android:layout_width="match_parent"
@@ -120,12 +125,12 @@
                     android:id="@+id/customer_notes"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="amount left: 9000 "
+                    android:text="amount left: 9000 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis "
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
                     />
 
-                <Button
+              <!--  <Button
                     android:id="@+id/call_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -138,19 +143,20 @@
                     android:background="@drawable/button_bg_transparent"
                     android:padding="8dp"
                     android:text="Make a Call"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white" />-->
 
 
                 <Button
                     android:id="@+id/download_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="28dp"
                     android:layout_marginLeft="28dp"
                     android:layout_marginRight="28dp"
                     android:layout_marginStart="28dp"
                     android:layout_marginBottom="8dp"
-
+                    android:visibility="visible"
                     android:background="@drawable/button_bg_transparent"
                     android:padding="8dp"
                     android:text="Download Attached Image"
@@ -158,19 +164,12 @@
 
 
             </LinearLayout>
-
-
-
-    </ScrollView>
+        </ScrollView>
 
     </android.support.v7.widget.CardView>
 
-
-
-
-
     <Button
-        android:id="@+id/save_button"
+        android:id="@+id/edit_button"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:text="@string/edit"

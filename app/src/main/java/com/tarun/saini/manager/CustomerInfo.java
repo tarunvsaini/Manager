@@ -84,7 +84,7 @@ public class CustomerInfo extends AppCompatActivity {
     {
         if (item.getItemId()==R.id.filter_list)
         {
-            startActivity(new Intent(CustomerInfo.this,CustomerDetail.class));
+            //
         }
         return super.onOptionsItemSelected(item);
     }
@@ -127,7 +127,8 @@ public class CustomerInfo extends AppCompatActivity {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(CustomerInfo.this, post_key+"", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(CustomerInfo.this, post_key+"", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(CustomerInfo.this,CustomerDetail.class));
                     }
                 });
 
