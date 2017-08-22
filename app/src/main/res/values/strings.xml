@@ -29,4 +29,5 @@
     <string name="error">Error finding image</string>
     <string name="edit">Edit</string>
     <string name="customer_details">Customer Details</string>
+    <string name="update">update</string>
 </resources>

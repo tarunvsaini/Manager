@@ -16,7 +16,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyTheme">
+        android:theme="@style/MyTheme"
+        android:name=".CustomerPersistence">
         <meta-data
             android:name="com.google.android.gms.vision"
             android:value="@integer/google_play_services_version" />
@@ -50,12 +51,12 @@
                 android:value="com.tarun.saini.manager.CustomerInfo" />
         </activity>
         <activity android:name=".ScanBarcode" />
-        <activity android:name=".CustomerDetail"
-            >
+        <activity android:name=".CustomerDetail">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tarun.saini.manager.CustomerInfo" />
         </activity>
+        <activity android:name=".CustomerUpdate"></activity>
     </application>
 
 </manifest>

@@ -28,6 +28,18 @@ import com.readystatesoftware.systembartint.SystemBarTintManager;
 public class CustomerInfo extends AppCompatActivity {
 
 
+    public static final String CUSTOMER_ID ="customer_id" ;
+    public static final String CUSTOMER_NAME ="customer_name" ;
+    public static final String CUSTOMER_ADDRESS ="customer_address" ;
+    public static final String CUSTOMER_UID ="customer_uid" ;
+    public static final String CUSTOMER_PHONE ="customer_phone" ;
+    public static final String CUSTOMER_PAN ="customer_pan" ;
+    public static final String CUSTOMER_GSTIN ="customer_gst" ;
+    public static final String CUSTOMER_NOTES ="customer_notes" ;
+    public static final String CUSTOMER_EMAIL ="customer_email" ;
+    public static final String CUSTOMER_URL ="customer_url" ;
+    public static final String CUSTOMER_DATE ="customer_date" ;
+
     FloatingActionButton fab;
     Toolbar toolbar;
     RecyclerView recyclerView;
@@ -39,6 +51,7 @@ public class CustomerInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_info);
         mDatabase= FirebaseDatabase.getInstance().getReference().child("Customer");
+        mDatabase.keepSynced(true);
         fab= (FloatingActionButton) findViewById(R.id.fab);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         empty_view= (RelativeLayout) findViewById(R.id.empty_view);
@@ -56,7 +69,9 @@ public class CustomerInfo extends AppCompatActivity {
             @Override
             public void onClick(View v)
             {
-                startActivity(new Intent(CustomerInfo.this,CustomerAdd.class));
+                Intent intent=new Intent(CustomerInfo.this,CustomerAdd.class);
+                intent .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 
             }
         });
@@ -110,7 +125,7 @@ public class CustomerInfo extends AppCompatActivity {
         FirebaseRecyclerAdapter<Customer,CustomerviewHolder> firebaseRecyclerAdapter
                 =new FirebaseRecyclerAdapter<Customer, CustomerviewHolder>(Customer.class,R.layout.list_item,CustomerviewHolder.class,mDatabase) {
             @Override
-            protected void populateViewHolder(CustomerviewHolder viewHolder, Customer model, int position) {
+            protected void populateViewHolder(CustomerviewHolder viewHolder, final Customer model, int position) {
 
                 final String post_key=getRef(position).getKey();
                 viewHolder.setName(model.getName());
@@ -128,7 +143,20 @@ public class CustomerInfo extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //Toast.makeText(CustomerInfo.this, post_key+"", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(CustomerInfo.this,CustomerDetail.class));
+                        Intent intent=new Intent(CustomerInfo.this,CustomerDetail.class);
+                        intent.putExtra(CUSTOMER_ID,post_key);
+                        intent.putExtra(CUSTOMER_NAME,model.getName());
+                        intent.putExtra(CUSTOMER_ADDRESS,model.getAddress());
+                        intent.putExtra(CUSTOMER_UID,model.getUid());
+                        intent.putExtra(CUSTOMER_PHONE,model.getPhone());
+                        intent.putExtra(CUSTOMER_PAN,model.getPan());
+                        intent.putExtra(CUSTOMER_GSTIN,model.getGst());
+                        intent.putExtra(CUSTOMER_EMAIL,model.getEmail());
+                        intent.putExtra(CUSTOMER_NOTES,model.getNotes());
+                        intent.putExtra(CUSTOMER_URL,model.getDownloadUrl());
+                        intent.putExtra(CUSTOMER_DATE,model.getDate());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                     }
                 });
 

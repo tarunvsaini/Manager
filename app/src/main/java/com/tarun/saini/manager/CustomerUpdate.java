@@ -40,19 +40,40 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
-public class CustomerAdd extends AppCompatActivity implements View.OnClickListener {
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_ADDRESS_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_DATE_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_EMAIL_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_GSTIN_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_ID_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_NAME_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_NOTES_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_PAN_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_PHONE_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_UID_DETAILS;
+import static com.tarun.saini.manager.CustomerDetail.CUSTOMER_URL_DETAILS;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_ADDRESS;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_DATE;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_EMAIL;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_GSTIN;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_ID;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_NAME;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_NOTES;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_PAN;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_PHONE;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_UID;
+import static com.tarun.saini.manager.CustomerInfo.CUSTOMER_URL;
+
+public class CustomerUpdate extends AppCompatActivity implements View.OnClickListener{
 
     private FloatingActionButton floatingActionButton;
     private TextView tv;
     private Button save;
-    private String xml, name_string, address_string, uid_string, jsonString, phone_string, gst_string, pan_string, email_string, notes_string, dateInString;
+    private String xml, name_string, address_string, uid_string, jsonString, phone_string, gst_string, pan_string, email_string, notes_string, dateInString,post_key,downLoadUrlNew;
     private EditText name, address, uid, phone, gst, pan, notes, email;
     private Integer REQUEST_CAMERA = 101, SELECT_FILE = 100;
     private ImageButton imageButton;
@@ -67,7 +88,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_customer_add);
+        setContentView(R.layout.activity_customer_update);
         name = (EditText) findViewById(R.id.name);
         address = (EditText) findViewById(R.id.address);
         uid = (EditText) findViewById(R.id.adhaar);
@@ -87,11 +108,42 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
         CustomerDetail.setLatoRegular(this,email);
 
 
+        post_key=getIntent().getExtras().getString(CUSTOMER_ID_DETAILS);
+        name_string=getIntent().getExtras().getString(CUSTOMER_NAME_DETAILS);
+        address_string=getIntent().getExtras().getString(CUSTOMER_ADDRESS_DETAILS);
+        uid_string=getIntent().getExtras().getString(CUSTOMER_UID_DETAILS);
+        phone_string=getIntent().getExtras().getString(CUSTOMER_PHONE_DETAILS);
+        gst_string=getIntent().getExtras().getString(CUSTOMER_GSTIN_DETAILS);
+        pan_string=getIntent().getExtras().getString(CUSTOMER_PAN_DETAILS);
+        email_string=getIntent().getExtras().getString(CUSTOMER_EMAIL_DETAILS);
+        notes_string=getIntent().getExtras().getString(CUSTOMER_NOTES_DETAILS);
+        downLoadUrl=getIntent().getExtras().getString(CUSTOMER_URL_DETAILS);
+        dateInString=getIntent().getExtras().getString(CUSTOMER_DATE_DETAILS);
+
+
         imageButton = (ImageButton) findViewById(R.id.add_photo_button);
         photo_tv = (TextView) findViewById(R.id.add_photo_text);
         imageView = (ImageView) findViewById(R.id.image);
 
         CustomerDetail.setLatoRegular(this,photo_tv);
+
+        if (!downLoadUrl.isEmpty())
+        {
+            Glide.with(this).load(downLoadUrl).into(imageView);
+        }
+
+
+       // private EditText name, address, uid, phone, gst, pan, notes, email;
+        name.setText(name_string);
+        address.setText(address_string);
+        uid.setText(uid_string);
+        phone.setText(phone_string);
+        gst.setText(gst_string);
+        pan.setText(pan_string);
+        notes.setText(notes_string);
+        email.setText(email_string);
+
+
 
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
@@ -105,7 +157,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CustomerAdd.this, ScanBarcode.class);
+                Intent intent = new Intent(CustomerUpdate.this, ScanBarcode.class);
                 startActivityForResult(intent, 0);
 
             }
@@ -211,7 +263,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                         // Create the temporary File where the photo should go
                         File photoFile = null;
                         try {
-                            photoFile = BitmapUtils.createTempImageFile(CustomerAdd.this);
+                            photoFile = BitmapUtils.createTempImageFile(CustomerUpdate.this);
                         } catch (IOException ex) {
                             // Error occurred while creating the File
                             ex.printStackTrace();
@@ -223,7 +275,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                             mTempPhotoPath = photoFile.getAbsolutePath();
 
                             // Get the content URI for the image file
-                            Uri photoURI = FileProvider.getUriForFile(CustomerAdd.this,
+                            Uri photoURI = FileProvider.getUriForFile(CustomerUpdate.this,
                                     FILE_PROVIDER_AUTHORITY,
                                     photoFile);
 
@@ -285,13 +337,13 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                             @SuppressWarnings("VisibleForTests") Uri ImageUrl = taskSnapshot.getDownloadUrl();
                             if (ImageUrl != null)
                             {
-                                downLoadUrl = ImageUrl.toString().trim();
+                                downLoadUrlNew = ImageUrl.toString().trim();
 
                             }
                             else
-                                {
-                                    downLoadUrl=" ";
-                                }
+                            {
+                                downLoadUrlNew=" ";
+                            }
 
                             if (!TextUtils.isEmpty(name_string)) {
                                 DatabaseReference newCustomer = mDatabase.push();
@@ -302,12 +354,13 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                                 newCustomer.child("gst").setValue(gst_string);
                                 newCustomer.child("pan").setValue(pan_string);
                                 newCustomer.child("date").setValue(dateInString);
-                                newCustomer.child("downloadUrl").setValue(downLoadUrl);
+                                newCustomer.child("downloadUrl").setValue(downLoadUrlNew);
                                 newCustomer.child("email").setValue(email_string);
                                 newCustomer.child("notes").setValue(notes_string);
                             }
 
-                            Intent homeIntent = new Intent(CustomerAdd.this, CustomerInfo.class);
+                            Intent homeIntent = new Intent(CustomerUpdate.this, CustomerInfo.class);
+                            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(homeIntent);
 
 
@@ -336,43 +389,44 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
         }
 
         else
-            {
-                if (!TextUtils.isEmpty(name_string)) {
-                    DatabaseReference newCustomer = mDatabase.push();
-                    newCustomer.child("name").setValue(name_string);
-                    newCustomer.child("address").setValue(address_string);
-                    newCustomer.child("uid").setValue(uid_string);
-                    newCustomer.child("phone").setValue(phone_string);
-                    newCustomer.child("gst").setValue(gst_string);
-                    newCustomer.child("pan").setValue(pan_string);
-                    newCustomer.child("date").setValue(dateInString);
-                    newCustomer.child("downloadUrl").setValue("");
-                    newCustomer.child("email").setValue(email_string);
-                    newCustomer.child("notes").setValue(notes_string);
-                    final ProgressDialog progressDialog = new ProgressDialog(this);
-                    progressDialog.setTitle(getString(R.string.saving_message)+"%.....");
-                    progressDialog.show();
+        {
+            if (!TextUtils.isEmpty(name_string)) {
+                DatabaseReference newCustomer = mDatabase.push();
+                newCustomer.child("name").setValue(name_string);
+                newCustomer.child("address").setValue(address_string);
+                newCustomer.child("uid").setValue(uid_string);
+                newCustomer.child("phone").setValue(phone_string);
+                newCustomer.child("gst").setValue(gst_string);
+                newCustomer.child("pan").setValue(pan_string);
+                newCustomer.child("date").setValue(dateInString);
+                newCustomer.child("downloadUrl").setValue(downLoadUrl);
+                newCustomer.child("email").setValue(email_string);
+                newCustomer.child("notes").setValue(notes_string);
+                final ProgressDialog progressDialog = new ProgressDialog(this);
+                progressDialog.setTitle(getString(R.string.saving_message)+"%.....");
+                progressDialog.show();
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run()
-                        {
-
-                            progressDialog.dismiss();
-                            Intent homeIntent = new Intent(CustomerAdd.this, CustomerInfo.class);
-                            startActivity(homeIntent);
-
-                        }
-                    },2000);
-
-
-
-                }
-                else
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run()
                     {
-                        Toast.makeText(this, "Please add some info about customer", Toast.LENGTH_SHORT).show();
+
+                        progressDialog.dismiss();
+                        Intent homeIntent = new Intent(CustomerUpdate.this, CustomerInfo.class);
+                        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(homeIntent);
+
                     }
+                },2000);
+
+
+
             }
+            else
+            {
+                Toast.makeText(this, "Please add some info about customer", Toast.LENGTH_SHORT).show();
+            }
+        }
 
 
     }
@@ -392,7 +446,8 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
         pan_string = pan.getText().toString();
         email_string = email.getText().toString();
         notes_string = notes.getText().toString();
-        dateInString = new SimpleDateFormat(pattern).format(new Date());
+       // dateInString = new SimpleDateFormat(pattern).format(new Date());
+        mDatabase.child(post_key).removeValue();
 
         uploadCustomerData();
 
@@ -400,4 +455,3 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
 
 
 }
-

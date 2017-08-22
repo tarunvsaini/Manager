@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:windowSoftInputMode="adjustPan|adjustResize"
-    tools:context="com.tarun.saini.manager.CustomerAdd">
+    tools:context="com.tarun.saini.manager.CustomerUpdate">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBar"
@@ -63,7 +63,7 @@
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
 
-                    android:scaleType="fitXY" />
+                    android:scaleType="centerCrop" />
 
 
             </RelativeLayout>

@@ -13,16 +13,18 @@ public class Customer {
             pan,
             email,
             notes,
+            downloadUrl,
             date;
 
     public Customer() {
     }
 
-    public Customer(String name, String address, String uid, String phone, String gst, String pan, String email, String notes, String date) {
+    public Customer(String name, String address,String downloadUrl, String uid, String phone, String gst, String pan, String email, String notes, String date) {
         this.name = name;
         this.address = address;
         this.uid = uid;
         this.phone = phone;
+        this.downloadUrl=downloadUrl;
         this.gst = gst;
         this.pan = pan;
         this.email = email;
@@ -100,5 +102,13 @@ public class Customer {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 }
