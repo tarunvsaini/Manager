@@ -63,6 +63,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
     private StorageReference mStorageRef;
     private DatabaseReference mDatabase;
     private static final String FILE_PROVIDER_AUTHORITY = "com.tarun.saini.fileprovider";
+    private boolean imp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,6 +306,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                                 newCustomer.child("downloadUrl").setValue(downLoadUrl);
                                 newCustomer.child("email").setValue(email_string);
                                 newCustomer.child("notes").setValue(notes_string);
+                                newCustomer.child("important").setValue(imp);
                             }
 
                             Intent homeIntent = new Intent(CustomerAdd.this, CustomerInfo.class);
@@ -330,7 +332,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                             @SuppressWarnings("VisibleForTests") double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
                             //displaying percentage in progress dialog
-                            progressDialog.setMessage(getString(R.string.uploaded) + ((int) progress) + "%...");
+                            progressDialog.setMessage( "Uploaded " + ((int) progress) + " %...");
                         }
                     });
         }
@@ -349,8 +351,9 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                     newCustomer.child("downloadUrl").setValue("");
                     newCustomer.child("email").setValue(email_string);
                     newCustomer.child("notes").setValue(notes_string);
+                    newCustomer.child("important").setValue(imp);
                     final ProgressDialog progressDialog = new ProgressDialog(this);
-                    progressDialog.setTitle(getString(R.string.saving_message)+"%.....");
+                    progressDialog.setTitle(getString(R.string.saving_message)+" %.....");
                     progressDialog.show();
 
                     new Handler().postDelayed(new Runnable() {
@@ -393,6 +396,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
         email_string = email.getText().toString();
         notes_string = notes.getText().toString();
         dateInString = new SimpleDateFormat(pattern).format(new Date());
+        imp=false;
 
         uploadCustomerData();
 

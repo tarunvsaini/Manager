@@ -13,8 +13,8 @@
     <string name="cancel">Cancel</string>
     <string name="launch_camera">Launch Camera Application</string>
     <string name="uploading_message">Uploading</string>
-    <string name="saving_message">           Saving</string>
-    <string name="uploaded">Uploaded</string>
+    <string name="saving_message">Saving</string>
+    <string name="uploaded">Uploaded </string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

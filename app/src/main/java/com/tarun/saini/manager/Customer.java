@@ -15,11 +15,12 @@ public class Customer {
             notes,
             downloadUrl,
             date;
+    boolean important;
 
     public Customer() {
     }
 
-    public Customer(String name, String address,String downloadUrl, String uid, String phone, String gst, String pan, String email, String notes, String date) {
+    public Customer(String name, String address,String downloadUrl, String uid, String phone, String gst, String pan, String email, String notes, String date,boolean important) {
         this.name = name;
         this.address = address;
         this.uid = uid;
@@ -30,6 +31,7 @@ public class Customer {
         this.email = email;
         this.notes = notes;
         this.date = date;
+        this.important=important;
     }
 
     public String getName() {
@@ -110,5 +112,13 @@ public class Customer {
 
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
+    }
+
+    public boolean isImportant() {
+        return important;
+    }
+
+    public void setImportant(boolean important) {
+        this.important = important;
     }
 }

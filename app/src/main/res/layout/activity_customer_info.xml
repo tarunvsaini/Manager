@@ -22,6 +22,7 @@
         android:id="@+id/customer_recycler_view">
     </android.support.v7.widget.RecyclerView>
 
+
     <!-- Empty view for the list -->
     <RelativeLayout
         android:id="@+id/empty_view"
