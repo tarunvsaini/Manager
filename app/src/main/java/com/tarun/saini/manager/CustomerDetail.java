@@ -104,13 +104,13 @@ public class CustomerDetail extends AppCompatActivity {
         setLatoBlack(this, editButton);
 
         customerName.setText(name_string);
-        customerEmail.setText(email_string);
-        customerAddress.setText(address_string);
-        customerPhone.setText(phone_string);
-        customerGst.setText(gst_string);
-        customerPan.setText(pan_string);
-        customerUid.setText(uid_string);
-        customerNotes.setText(notes_string);
+        customerEmail.setText("Email: "+email_string);
+        customerAddress.setText("Address: "+address_string);
+        customerPhone.setText("Phone: "+phone_string);
+        customerGst.setText("GSTIN: "+gst_string);
+        customerPan.setText("PAN: "+pan_string);
+        customerUid.setText("Aadhaar/UID: "+uid_string);
+        customerNotes.setText("Notes: "+notes_string);
 
         if (downLoadUrl.isEmpty())
         {
