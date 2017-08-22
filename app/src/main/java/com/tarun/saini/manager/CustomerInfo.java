@@ -125,7 +125,7 @@ public class CustomerInfo extends AppCompatActivity {
         FirebaseRecyclerAdapter<Customer,CustomerviewHolder> firebaseRecyclerAdapter
                 =new FirebaseRecyclerAdapter<Customer, CustomerviewHolder>(Customer.class,R.layout.list_item,CustomerviewHolder.class,mDatabase) {
             @Override
-            protected void populateViewHolder(CustomerviewHolder viewHolder, final Customer model, int position) {
+            protected void populateViewHolder(final CustomerviewHolder viewHolder, final Customer model, int position) {
 
                 final String post_key=getRef(position).getKey();
                 viewHolder.setName(model.getName());
@@ -161,11 +161,11 @@ public class CustomerInfo extends AppCompatActivity {
                 });
 
 
-                final boolean checked=viewHolder.add_important.isChecked();
+                /*final boolean checked=viewHolder.add_important.isChecked();*/
                 viewHolder.add_important.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if ((checked)) //check for condition if recipe in database
+                        if (viewHolder.add_important.isChecked()) //check for condition if recipe in database
                         {
 
                             Toast.makeText(CustomerInfo.this, "Added", Toast.LENGTH_SHORT).show();
