@@ -1,12 +1,14 @@
 package com.tarun.saini.manager;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -99,7 +101,35 @@ public class CustomerInfo extends AppCompatActivity {
     {
         if (item.getItemId()==R.id.filter_list)
         {
-            //
+            final CharSequence[] items = {"By Name", "By Date(Newest)","By Date(Oldest)","Show Marked Important"};
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Filter Customers");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i)
+                {
+                    if (items[i].equals("By Name"))
+                    {
+
+                    }
+                    else if (items[i].equals("By Date(Newest)"))
+                    {
+
+                    }
+                    else if (items[i].equals("By Date(Oldest)"))
+                    {
+
+                    }
+                    else if (items[i].equals("By Show Marked Important"))
+                    {
+
+                    }
+
+                }
+            });
+
+            builder.show();
         }
         return super.onOptionsItemSelected(item);
     }
