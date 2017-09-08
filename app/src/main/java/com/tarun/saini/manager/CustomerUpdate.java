@@ -359,6 +359,7 @@ public class CustomerUpdate extends AppCompatActivity implements View.OnClickLis
                                 newCustomer.child("notes").setValue(notes_string);
                             }
 
+                            finish();
                             Intent homeIntent = new Intent(CustomerUpdate.this, CustomerInfo.class);
                             homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(homeIntent);
@@ -412,6 +413,7 @@ public class CustomerUpdate extends AppCompatActivity implements View.OnClickLis
                     {
 
                         progressDialog.dismiss();
+                        finish();
                         Intent homeIntent = new Intent(CustomerUpdate.this, CustomerInfo.class);
                         homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(homeIntent);

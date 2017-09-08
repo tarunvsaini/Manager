@@ -230,7 +230,7 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
 
                             // Add the URI so the camera can store the image
                             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                            startActivityForResult(Intent.createChooser(intent, "Choose Camera"), REQUEST_CAMERA);
+                            startActivityForResult(intent, REQUEST_CAMERA);
 
 
                         }
@@ -309,7 +309,9 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                                 newCustomer.child("important").setValue(imp);
                             }
 
+                            finish();
                             Intent homeIntent = new Intent(CustomerAdd.this, CustomerInfo.class);
+                            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(homeIntent);
 
 
@@ -362,7 +364,9 @@ public class CustomerAdd extends AppCompatActivity implements View.OnClickListen
                         {
 
                             progressDialog.dismiss();
+                            finish();
                             Intent homeIntent = new Intent(CustomerAdd.this, CustomerInfo.class);
+                            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(homeIntent);
 
                         }

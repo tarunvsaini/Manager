@@ -1,16 +1,16 @@
 package com.tarun.saini.manager;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,30 +23,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.futuremind.recyclerviewfastscroll.FastScroller;
-import com.futuremind.recyclerviewfastscroll.SectionTitleProvider;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import xyz.danoz.recyclerviewfastscroller.sectionindicator.title.SectionTitleIndicator;
+import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class CustomerInfo extends AppCompatActivity {
 
 
-    public static final String CUSTOMER_ID ="customer_id" ;
-    public static final String CUSTOMER_NAME ="customer_name" ;
-    public static final String CUSTOMER_ADDRESS ="customer_address" ;
-    public static final String CUSTOMER_UID ="customer_uid" ;
-    public static final String CUSTOMER_PHONE ="customer_phone" ;
-    public static final String CUSTOMER_PAN ="customer_pan" ;
-    public static final String CUSTOMER_GSTIN ="customer_gst" ;
-    public static final String CUSTOMER_NOTES ="customer_notes" ;
-    public static final String CUSTOMER_EMAIL ="customer_email" ;
-    public static final String CUSTOMER_URL ="customer_url" ;
-    public static final String CUSTOMER_DATE ="customer_date" ;
+    public static final String CUSTOMER_ID = "customer_id";
+    public static final String CUSTOMER_NAME = "customer_name";
+    public static final String CUSTOMER_ADDRESS = "customer_address";
+    public static final String CUSTOMER_UID = "customer_uid";
+    public static final String CUSTOMER_PHONE = "customer_phone";
+    public static final String CUSTOMER_PAN = "customer_pan";
+    public static final String CUSTOMER_GSTIN = "customer_gst";
+    public static final String CUSTOMER_NOTES = "customer_notes";
+    public static final String CUSTOMER_EMAIL = "customer_email";
+    public static final String CUSTOMER_URL = "customer_url";
+    public static final String CUSTOMER_DATE = "customer_date";
 
     FloatingActionButton fab;
     Toolbar toolbar;
@@ -55,40 +53,50 @@ public class CustomerInfo extends AppCompatActivity {
     private DatabaseReference mDatabaseImportant;
     private Query mQueryByName;
     RelativeLayout empty_view;
-    private FastScroller fastScroller;
-    private boolean important=false;
+    private boolean important = false;
+    //private MyCustomLayoutManager manager;
     private LinearLayoutManager manager;
+    int previousPosition=0;
+    TextView dictionary;
+    CustomRecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_info);
-        mDatabase= FirebaseDatabase.getInstance().getReference().child("Customer");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Customer");
         //mDatabaseImportant= mDatabase.push().child("important");
-        mQueryByName=mDatabase.orderByChild("name");
+        mQueryByName = mDatabase.orderByChild("name");
+        //mQueryByName=mDatabase.orderByChild("important").equalTo(true);
         mDatabase.keepSynced(true);
-        fab= (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        empty_view= (RelativeLayout) findViewById(R.id.empty_view);
-        recyclerView= (RecyclerView) findViewById(R.id.customer_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        manager=new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
+        empty_view = (RelativeLayout) findViewById(R.id.empty_view);
+
+
+
+        recyclerView = (CustomRecyclerView) findViewById(R.id.customer_recycler_view);
+       // recyclerView = (RecyclerView) findViewById(R.id.customer_recycler_view);
+        recyclerView.setNestedScrollingEnabled(false);
+
+        // recyclerView.setHasFixedSize(true);
+
+
+        /*manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);*/
+
+
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setNavigationBarTintEnabled(true);
         tintManager.setTintColor(Color.parseColor("#20000000"));
-
-
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                Intent intent=new Intent(CustomerInfo.this,CustomerAdd.class);
-                intent .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            public void onClick(View v) {
+                Intent intent = new Intent(CustomerInfo.this, CustomerAdd.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
             }
@@ -103,55 +111,39 @@ public class CustomerInfo extends AppCompatActivity {
         if (!hasPermissions(this, Permissions)) {
             ActivityCompat.requestPermissions(this, Permissions, Permission_All);
         }
+        VerticalRecyclerViewFastScroller fastScroller = (VerticalRecyclerViewFastScroller) findViewById(R.id.fast_scroller);
+
+        // Connect the recycler to the scroller (to let the scroller scroll the list)
+        fastScroller.setRecyclerView(recyclerView);
+
+        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
+        recyclerView.setOnScrollListener(fastScroller.getOnScrollListener());
+
+
+        manager = new MyCustomLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
+        //recyclerView.smoothScrollToPosition(position);
+
+
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-       /* if (item.getItemId()==R.id.filter_list)
-        {
-            final CharSequence[] items = {"By Name", "By Date(Newest)","By Date(Oldest)","Show Marked Important"};
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.filter_list) {
+            Intent intent = new Intent(CustomerInfo.this, ImportantCustomer.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Filter Customers");
-            builder.setItems(items, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i)
-                {
-                    if (items[i].equals("By Name"))
-                    {
-
-                        mQueryByName=mDatabase.orderByChild("name");
-
-                    }
-                    else if (items[i].equals("By Date(Newest)"))
-                    {
-                        mQueryByName=mDatabase.orderByChild("date");
-
-                    }
-                    else if (items[i].equals("By Date(Oldest)"))
-                    {
-                        mQueryByName=mDatabase.orderByChild("date");
-
-                    }
-                    else if (items[i].equals("By Show Marked Important"))
-                    {
-                        mQueryByName=mDatabase.orderByChild("name");
-
-                    }
-
-                }
-            });
-
-            builder.show();
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -175,51 +167,75 @@ public class CustomerInfo extends AppCompatActivity {
         super.onStart();
 
 
-        FirebaseRecyclerAdapter<Customer,CustomerviewHolder> firebaseRecyclerAdapter
-                =new FirebaseRecyclerAdapter<Customer, CustomerviewHolder>(Customer.class,R.layout.list_item,CustomerviewHolder.class,mQueryByName) {
+        FirebaseRecyclerAdapter<Customer, CustomerviewHolder> firebaseRecyclerAdapter
+                = new FirebaseRecyclerAdapter<Customer, CustomerviewHolder>(Customer.class, R.layout.list_item, CustomerviewHolder.class, mQueryByName) {
             @Override
-            protected void populateViewHolder(final CustomerviewHolder viewHolder, final Customer model, int position) {
+            protected void populateViewHolder(final CustomerviewHolder viewHolder, final Customer model, int position)
+            {
 
-                final String post_key=getRef(position).getKey();
-                String nameTextInitial=model.getName().substring(0,1);
+                final String post_key = getRef(position).getKey();
+                final String nameTextInitial = model.getName().substring(0, 1);
                 viewHolder.setName(model.getName());
-                viewHolder.setPhone(model.getPhone());
+               // viewHolder.setPhone(model.getPhone());
                 viewHolder.setDate(model.getDate());
                 viewHolder.setGST(model.getGst());
-               // viewHolder.setGST(String.valueOf(FirebaseDatabase.getInstance().getReference()).substring(8,21));
+                // viewHolder.setGST(String.valueOf(FirebaseDatabase.getInstance().getReference()).substring(8,21));
                 viewHolder.setIconText(nameTextInitial);
+
+                /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                    @Override
+                    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                    }
+
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+
+                        if (dy < 0) {
+                            dictionary.setVisibility(View.VISIBLE);
+                            dictionary.setText();
+
+                            //Toast.makeText(CustomerInfo.this, "Up", Toast.LENGTH_SHORT).show();
+                            // Recycle view scrolling up...
+
+                        } else if (dy > 0)
+                        {
+                            dictionary.setVisibility(View.VISIBLE);
+                            dictionary.setText(nameTextInitial);
+
+                           // Toast.makeText(CustomerInfo.this, "Down", Toast.LENGTH_SHORT).show();
+                            // Recycle view scrolling down...
+                        }
+                    }
+                });*/
 
 
                 viewHolder.add_important.setChecked(model.isImportant());
 
 
-
-                CustomerDetail.setLatoBlack(CustomerInfo.this,viewHolder.customer_name);
-                CustomerDetail.setLatoBlack(CustomerInfo.this,viewHolder.customer_phone);
-                CustomerDetail.setLatoBlack(CustomerInfo.this,viewHolder.customer_added_date);
-                CustomerDetail.setLatoRegular(CustomerInfo.this,viewHolder.customer_gst);
-
-
-
-
+                CustomerDetail.setLatoBlack(CustomerInfo.this, viewHolder.customer_name);
+              //  CustomerDetail.setLatoBlack(CustomerInfo.this, viewHolder.customer_phone);
+                CustomerDetail.setLatoBlack(CustomerInfo.this, viewHolder.customer_added_date);
+                CustomerDetail.setLatoRegular(CustomerInfo.this, viewHolder.customer_gst);
 
 
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //Toast.makeText(CustomerInfo.this, post_key+"", Toast.LENGTH_SHORT).show();
-                        Intent intent=new Intent(CustomerInfo.this,CustomerDetail.class);
-                        intent.putExtra(CUSTOMER_ID,post_key);
-                        intent.putExtra(CUSTOMER_NAME,model.getName());
-                        intent.putExtra(CUSTOMER_ADDRESS,model.getAddress());
-                        intent.putExtra(CUSTOMER_UID,model.getUid());
-                        intent.putExtra(CUSTOMER_PHONE,model.getPhone());
-                        intent.putExtra(CUSTOMER_PAN,model.getPan());
-                        intent.putExtra(CUSTOMER_GSTIN,model.getGst());
-                        intent.putExtra(CUSTOMER_EMAIL,model.getEmail());
-                        intent.putExtra(CUSTOMER_NOTES,model.getNotes());
-                        intent.putExtra(CUSTOMER_URL,model.getDownloadUrl());
-                        intent.putExtra(CUSTOMER_DATE,model.getDate());
+                        Intent intent = new Intent(CustomerInfo.this, CustomerDetail.class);
+                        intent.putExtra(CUSTOMER_ID, post_key);
+                        intent.putExtra(CUSTOMER_NAME, model.getName());
+                        intent.putExtra(CUSTOMER_ADDRESS, model.getAddress());
+                        intent.putExtra(CUSTOMER_UID, model.getUid());
+                        intent.putExtra(CUSTOMER_PHONE, model.getPhone());
+                        intent.putExtra(CUSTOMER_PAN, model.getPan());
+                        intent.putExtra(CUSTOMER_GSTIN, model.getGst());
+                        intent.putExtra(CUSTOMER_EMAIL, model.getEmail());
+                        intent.putExtra(CUSTOMER_NOTES, model.getNotes());
+                        intent.putExtra(CUSTOMER_URL, model.getDownloadUrl());
+                        intent.putExtra(CUSTOMER_DATE, model.getDate());
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                     }
@@ -241,8 +257,7 @@ public class CustomerInfo extends AppCompatActivity {
 
                             Toast.makeText(CustomerInfo.this, "Added", Toast.LENGTH_SHORT).show();
 
-                        } else
-                        {
+                        } else {
                             mDatabase.child(post_key).child("important").setValue(false);
                             Toast.makeText(CustomerInfo.this, "Removed", Toast.LENGTH_SHORT).show();
 
@@ -250,11 +265,27 @@ public class CustomerInfo extends AppCompatActivity {
                     }
                 });
 
+
+                /*if (position>previousPosition)
+                {
+                    AnimationUtil.animate(viewHolder,true);
+                }
+                else
+                    {
+                        AnimationUtil.animate(viewHolder,false);
+                    }
+
+                    previousPosition=position;*/
+                //recyclerView.smoothScrollToPosition(position);
+            }
+
+            @Override
+            public int getItemCount() {
+                return super.getItemCount();
             }
         };
 
-
-
+       // Toast.makeText(this, firebaseRecyclerAdapter.getItemCount()+"", Toast.LENGTH_SHORT).show();
 
         recyclerView.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.notifyDataSetChanged();
@@ -262,50 +293,47 @@ public class CustomerInfo extends AppCompatActivity {
 
 
 
+
+
     }
 
 
-    public static class CustomerviewHolder extends RecyclerView.ViewHolder
-    {
+    public static class CustomerviewHolder extends RecyclerView.ViewHolder {
         View mView;
         CheckBox add_important;
-        TextView customer_name, customer_added_date,customer_phone,customer_gst,iconText;
+        TextView customer_name, customer_added_date, customer_phone, customer_gst, iconText;
 
         public CustomerviewHolder(View itemView) {
             super(itemView);
 
-            mView=itemView;
-            add_important= (CheckBox) mView.findViewById(R.id.icon_star);
+            mView = itemView;
+            add_important = (CheckBox) mView.findViewById(R.id.icon_star);
 
         }
 
-        public void setName(String name)
-        {
-             customer_name= (TextView) mView.findViewById(R.id.name);
+        public void setName(String name) {
+            customer_name = (TextView) mView.findViewById(R.id.name);
             customer_name.setText(name);
 
         }
-        public void setDate(String date)
-        {
-             customer_added_date = (TextView) mView.findViewById(R.id.timestamp);
+
+        public void setDate(String date) {
+            customer_added_date = (TextView) mView.findViewById(R.id.timestamp);
             customer_added_date.setText(date);
         }
 
-        public void setPhone(String phone)
-        {
-             customer_phone= (TextView) mView.findViewById(R.id.txt_primary);
+       /* public void setPhone(String phone) {
+            customer_phone = (TextView) mView.findViewById(R.id.txt_primary);
             customer_phone.setText(phone);
+        }*/
+
+        public void setGST(String gst) {
+            customer_gst = (TextView) mView.findViewById(R.id.txt_secondary);
+            customer_gst.setText("GSTIN: " + gst);
         }
 
-        public void setGST(String gst)
-        {
-             customer_gst= (TextView) mView.findViewById(R.id.txt_secondary);
-            customer_gst.setText("GSTIN: "+gst);
-        }
-
-        public void setIconText(String text)
-        {
-            iconText= (TextView) mView.findViewById(R.id.icon_text);
+        public void setIconText(String text) {
+            iconText = (TextView) mView.findViewById(R.id.icon_text);
             iconText.setText(text);
         }
 

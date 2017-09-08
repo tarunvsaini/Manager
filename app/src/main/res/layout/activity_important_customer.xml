@@ -17,7 +17,6 @@
         android:background="@drawable/gradient_orange"
         android:minHeight="?attr/actionBarSize"
         android:fitsSystemWindows="true"
-        android:elevation="10dp"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <LinearLayout
@@ -27,17 +26,17 @@
         android:weightSum="2">
 
 
-       <!-- <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
-            android:id="@+id/customer_recycler_view"
-            android:animateLayoutChanges="false"
-            android:layout_weight="1">
-        </android.support.v7.widget.RecyclerView>-->
+         <android.support.v7.widget.RecyclerView
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:layout_below="@+id/toolbar"
+             android:id="@+id/customer_recycler_view"
+             android:animateLayoutChanges="false"
+             android:layout_weight="1">
+         </android.support.v7.widget.RecyclerView>
 
 
-        <com.tarun.saini.manager.CustomRecyclerView
+        <!--<com.tarun.saini.manager.CustomRecyclerView
 
             android:id="@+id/customer_recycler_view"
             android:layout_width="match_parent"
@@ -53,7 +52,7 @@
             recyclerviewfastscroller:rfs_barColor="@color/colorPrimaryDark"
             recyclerviewfastscroller:rfs_handleBackground="@drawable/scroll_shape"
             android:layout_weight="1"
-            />
+            />-->
 
 
 

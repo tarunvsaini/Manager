@@ -11,13 +11,13 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <application
+        android:name=".CustomerPersistence"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyTheme"
-        android:name=".CustomerPersistence">
+        android:theme="@style/MyTheme">
         <meta-data
             android:name="com.google.android.gms.vision"
             android:value="@integer/google_play_services_version" />
@@ -35,7 +35,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".CustomerInfo"
+        <activity
+            android:name=".CustomerInfo"
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -57,7 +58,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tarun.saini.manager.CustomerInfo" />
         </activity>
-        <activity android:name=".CustomerUpdate"></activity>
+        <activity android:name=".CustomerUpdate"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="stateVisible|adjustResize"
+            />
+        <activity android:name=".ImportantCustomer"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tarun.saini.manager.CustomerInfo" />
+        </activity>
     </application>
 
 </manifest>
